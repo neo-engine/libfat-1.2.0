@@ -19,7 +19,7 @@ BUILD		?=	release
 SOURCES		:=	../source source
 INCLUDES	:=	../include
 DATA		:=
-LIB		:=	$(TOPDIR)/nds/lib
+LIB		:=	$(TOPDIR)/lib
 
 #---------------------------------------------------------------------------------
 # options for code generation
