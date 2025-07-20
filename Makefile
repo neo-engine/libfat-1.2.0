@@ -1,64 +1,50 @@
 ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
 endif
 
 export TOPDIR	:=	$(CURDIR)
 
 export LIBFAT_MAJOR	:= 1
 export LIBFAT_MINOR	:= 2
-export LIBFAT_PATCH	:= 0
+export LIBFAT_REVISION	:= 0
 
-export VERSTRING	:=	$(LIBFAT_MAJOR).$(LIBFAT_MINOR).$(LIBFAT_PATCH)
+VERSION	:=	$(LIBFAT_MAJOR).$(LIBFAT_MINOR).$(LIBFAT_REVISION)
 
-export DESTDIR := $(DESTDIR)
+.PHONY: release debug clean all
 
-default: release
-
-all: release dist
-
-release: nds-release
-
-nds-release: include/libfatversion.h
-	$(MAKE) -C nds BUILD=release
-
-debug: nds-debug
-
-nds-debug: include/libfatversion.h
-	$(MAKE) -C nds BUILD=debug
-
-clean: nds-clean
-
-nds-clean:
-	$(MAKE) -C nds clean
-
-dist-bin: nds-dist-bin
-
-nds-dist-bin: include/libfatversion.h nds-release distribute/$(VERSTRING)
-	$(MAKE) -C nds dist-bin
-
-dist-src: distribute/$(VERSTRING)
-	@tar --exclude=.svn --exclude=*CVS* -cvjf distribute/$(VERSTRING)/libfat-src-$(VERSTRING).tar.bz2 \
-	source include Makefile \
-	nds/Makefile
-
-dist: dist-bin dist-src
-
-distribute/$(VERSTRING):
-	@[ -d $@ ] || mkdir -p $@
+all: include/libfatversion.h release debug
 
 include/libfatversion.h : Makefile
 	@echo "#ifndef __LIBFATVERSION_H__" > $@
 	@echo "#define __LIBFATVERSION_H__" >> $@
 	@echo >> $@
-	@echo "#define _LIBFAT_MAJOR_	$(LIBFAT_MAJOR)" >> $@
-	@echo "#define _LIBFAT_MINOR_	$(LIBFAT_MINOR)" >> $@
-	@echo "#define _LIBFAT_PATCH_	$(LIBFAT_PATCH)" >> $@
+	@echo "#define LIBFAT_MAJOR    $(LIBFAT_MAJOR)" >> $@
+	@echo "#define LIBFAT_MINOR    $(LIBFAT_MINOR)" >> $@
+	@echo "#define LIBFAT_REVISION $(LIBFAT_REVISION)" >> $@
 	@echo >> $@
 	@echo '#define _LIBFAT_STRING "libFAT Release '$(LIBFAT_MAJOR).$(LIBFAT_MINOR).$(LIBFAT_PATCH)'"' >> $@
 	@echo >> $@
 	@echo "#endif // __LIBFATVERSION_H__" >> $@
 
-install: nds-install
 
-nds-install: nds-release
-	$(MAKE) -C nds install
+#-------------------------------------------------------------------------------
+release: lib
+#-------------------------------------------------------------------------------
+	$(MAKE) -C arm9 BUILD=release
+
+#-------------------------------------------------------------------------------
+debug: lib
+#-------------------------------------------------------------------------------
+	$(MAKE) -C arm9 BUILD=debug
+
+#-------------------------------------------------------------------------------
+lib:
+#-------------------------------------------------------------------------------
+	mkdir lib
+
+#-------------------------------------------------------------------------------
+clean:
+#-------------------------------------------------------------------------------
+	@$(MAKE) -C arm9 clean
+	@$(RM) -r include/libfatversion.h lib
+

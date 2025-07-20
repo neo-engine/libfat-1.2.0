@@ -1,4 +1,4 @@
 include/libfatversion.h
 lib
-nds/release
-nds/include
+arm9/release
+arm9/debug
