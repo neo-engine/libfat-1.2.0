@@ -32,53 +32,14 @@
 #include <fat.h>
 #include <stddef.h>
 #include <stdint.h>
+#define NDS
 
-// When compiling for NDS, make sure NDS is defined
-#ifndef NDS
- #if defined ARM9 || defined ARM7
-  #define NDS
- #endif
-#endif
+#include <nds/ndstypes.h>
+#include <nds/system.h>
+#include <nds/disc_io.h>
 
-// Platform specific includes
-#if defined(__gamecube__) || defined (__wii__)
-   #include <gctypes.h>
-   #include <ogc/disc_io.h>
-   #include <gccore.h>
-#elif defined(NDS)
-   #include <nds/ndstypes.h>
-   #include <nds/system.h>
-   #include <nds/disc_io.h>
-#elif defined(GBA)
-   #include <gba_types.h>
-   #include <disc_io.h>
-#elif defined(GP2X)
-  #include <gp2xtypes.h>
-  #include <disc_io.h>
-#endif
-
-// Platform specific options
-#if   defined (__wii__)
-   #define DEFAULT_CACHE_PAGES 4
-   #define DEFAULT_SECTORS_PAGE 64
-   #define USE_LWP_LOCK
-   #define USE_RTC_TIME
-#elif defined (__gamecube__)
-   #define DEFAULT_CACHE_PAGES 4
-   #define DEFAULT_SECTORS_PAGE 64
-   #define USE_LWP_LOCK
-   #define USE_RTC_TIME
-#elif defined (NDS)
-   #define DEFAULT_CACHE_PAGES 16
-   #define DEFAULT_SECTORS_PAGE 8
-   #define USE_RTC_TIME
-#elif defined (GBA)
-   #define DEFAULT_CACHE_PAGES 2
-   #define DEFAULT_SECTORS_PAGE 8
-   #define LIMIT_SECTORS 128
-#elif defined (GP2X)
-  #define DEFAULT_CACHE_PAGES 16
-  #define DEFAULT_SECTORS_PAGE 8
-#endif
+#define DEFAULT_CACHE_PAGES 16
+#define DEFAULT_SECTORS_PAGE 8
+#define USE_RTC_TIME
 
 #endif // _COMMON_H

@@ -1,7 +1,3 @@
-ifeq ($(strip $(DEVKITPRO)),)
-$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro")
-endif
-
 export TOPDIR	:=	$(CURDIR)
 
 export LIBFAT_MAJOR	:= 1
@@ -30,6 +26,7 @@ include/libfatversion.h : Makefile
 #-------------------------------------------------------------------------------
 release: lib
 #-------------------------------------------------------------------------------
+	echo $(LIBNDS)
 	$(MAKE) -C arm9 BUILD=release
 
 #-------------------------------------------------------------------------------
